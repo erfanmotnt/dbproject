@@ -18,6 +18,10 @@ def tagview(request):
         cusername = request.data['cusername']
         with connection.cursor() as cursor:
             cursor.execute("insert into mhbank_tag values(%s, %s)", [tname, cusername])
+        
+        instance = Tag.objects.raw("select * from mhbank_tag where tname = %s", [tname])[0]
+        serializer = TagSerializer(instance, many=False)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
