@@ -24,8 +24,20 @@ def tagview(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def subtagview(request):
-    data = SubTag.objects.raw("select * from mhbank_subtag")
-    serializer = SubTagSerializer(data, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    if request.method == 'GET':
+        data = SubTag.objects.raw("select * from mhbank_subtag")
+        serializer = SubTagSerializer(data, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    elif request.method == 'POST':
+        tname = request.data['tname']
+        stname = request.data['stname']
+        stid = hash(tname+stname)%1000
+        cusername = request.data['cusername']
+        with connection.cursor() as cursor:
+            cursor.execute("insert into mhbank_subtag values(%s, %s, null, null, %s)", [stid, stname, tname])
+        
+        instance = SubTag.objects.raw("select * from mhbank_subtag where stid = %s", [stid])[0]
+        serializer = SubTagSerializer(instance, many=False)
+        return Response(serializer.data, status=status.HTTP_200_OK)
