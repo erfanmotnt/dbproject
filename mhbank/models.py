@@ -40,16 +40,15 @@ class Source(models.Model):
 
     # questions
 
-    def __str__(self):
-        return self.name
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=200)
+    tname = models.CharField(max_length=200, primary_key = True)
+    cusername = models.ForeignKey(Account, null = True, on_delete=models.SET_NULL)
 
     # sub_tags
     def __str__(self):
-        return self.name
+        return self.tname
 
 
 class Sub_tag(models.Model):
@@ -69,7 +68,8 @@ class Event(models.Model):
         return self.name
 
 
-class Question(models.Model):
+class Problem(models.Model):
+    pid = models.IntegerField(primary_key = True)
     name = models.CharField(max_length=200)
     verification_status = models.CharField(max_length=50)
     verification_comment = models.CharField(max_length=1000, null=True, blank=True)
@@ -91,70 +91,8 @@ class Question(models.Model):
         return self.name
 
 
-    # def tags_name(self):
-    #     query = Tag.objects.filter(question=self.pk)
-    #     outList = []
-    #     for tag in query:
-    #         outList.append(tag.name)
-    #     return outList
-
-
-    # def sub_tags_name(self):
-    #     query = Sub_tag.objects.filter(question=self.pk)
-    #     outList = []
-    #     for tag in query:
-    #         outList.append(tag.name)
-    #     return outList
-
-    # def events_name(self):
-    #     query = Event.objects.filter(question=self.pk)
-    #     outList = []
-    #     for tag in query:
-    #         outList.append(tag.name)
-    #     return outList
-    
-    # def source_name(self):
-    #     query = Source.objects.filter(question=self.pk)
-    #     return query[0].name if len(query) > 0 else None
-    
-    # def question_maker_name(self):
-    #     query = Account.objects.filter(question=self.pk)
-    #     return query[0].user.username
-    
-
-
-class Hardness(models.Model):
-    level = models.IntegerField()
-    appropriate_grades_min = models.IntegerField(
-        default=1,
-        validators=[MaxValueValidator(12), MinValueValidator(1)]
-    )
-    appropriate_grades_max = models.IntegerField(
-        default=12,
-        validators=[MaxValueValidator(12), MinValueValidator(1)]
-    )
-    question = models.OneToOneField(Question, null=True, on_delete=models.CASCADE, related_name='hardness')
-
-    def __str__(self):
-        return str(self.level)
-
-
-class Attempt(models.Model):
-    account = models.ForeignKey(Account, on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    time = models.IntegerField(default=0)
-    date = models.DateTimeField()
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-
-
-class Themed_q(models.Model):
-    theme = models.CharField(max_length=200)
-    text = models.TextField()
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-
-
 class Answer(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True, related_name='answers')
+    problem = models.ForeignKey(Problem, on_delete=models.CASCADE, null=True, related_name='answers')
     text = models.TextField()
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     change_date = models.DateTimeField(null=True, blank=True)
@@ -183,22 +121,3 @@ class Teach_box(models.Model):
     change_date = models.DateTimeField(null=True, blank=True)
     publish_date = models.DateTimeField('date published', null=True, blank=True)
 
-
-class Comment(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='comments')
-    #teach_box = models.ForeignKey(Teach_box, on_delete=models.CASCADE, null=True)
-    text = models.TextField()
-    writer = models.ForeignKey(Account, on_delete=models.CASCADE)
-    publish_date = models.DateTimeField('date published', null=True, blank=True)
-
-    def __str__(self):
-        return self.writer.user.username + " " + self.question.name
-
-    
-'''
-from mhbank.models import Question, Hardness
-for q in Question.objects.all():
-    h = Hardness(level=q.level, appropriate_grades_min=q.appropriate_grades_min, appropriate_grades_max=q.appropriate_grades_max)
-    q.hardness=h
-    h.save()
-'''

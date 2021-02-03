@@ -1,19 +1,14 @@
-from rest_framework import status, viewsets
-from rest_framework.decorators import api_view
-from rest_framework.parsers import JSONParser
+from django.core.paginator import Paginator
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework import viewsets
-from rest_framework import mixins
 
-from mhbank.models import Question
 from mhbank.models import Tag
-from mhbank.views import permissions
 from mhbank.serializers import TagSerializer
 
 
-class TagView(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.ListModelMixin,
-              mixins.UpdateModelMixin):
-    permission_classes = [permissions.TagPermission]
-    queryset = Tag.objects.all()
-    serializer_class = TagSerializer
+@api_view(['GET'])
+def tagview(request):
+    data = Tag.objects.raw("select * from mhbank_tag")
+    serializer = TagSerializer(data, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
