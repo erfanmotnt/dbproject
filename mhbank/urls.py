@@ -2,6 +2,7 @@ from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.routers import DefaultRouter
 from .views.tagview import *
+from .views.problemview import *
 router = DefaultRouter()
 # router.register('questionproperties', QuestionPropertiesView)
 # router.register('questionproperties/<int:pk>', QuestionPropertiesView)
@@ -9,6 +10,7 @@ router = DefaultRouter()
 urlpatterns = [
     path('tag/', tagview),
     path('subtag/', subtagview),
+    path('problem/', problemview),
 ]
 
 urlpatterns += router.urls
