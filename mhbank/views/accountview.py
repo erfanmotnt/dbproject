@@ -17,6 +17,7 @@ def accountview(request):
         email = request.data['email']
         role = request.data['role']
         with connection.cursor() as cursor:
-            cursor.execute("insert into mhbank_account values(%s, %s, %s, %s, %s, %s)",\
+            cursor.execute("insert into mhbank_account values(%s, %s, %s, %s, %s, %s, 0, 0)",\
              [username, firstname, lastname, phone, email, role])
 
+        return Response(request.data, status=status.HTTP_200_OK)
