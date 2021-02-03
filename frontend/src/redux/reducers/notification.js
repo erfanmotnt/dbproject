@@ -8,8 +8,8 @@ function account(state = {}, action) {
       return { ...state };
 
     case actionTypes.CREATE_TAGS_SUCCESS:
-      toast.success('تگ ما موفقیت اضافه شد!');
-      window.location.reload();
+      toast.success('تگ با موفقیت اضافه شد!');
+      setTimeout(() => window.location.reload(), 2000)
       return { ...state };
 
     case actionTypes.CREATE_TAGS_FAILURE:
@@ -17,12 +17,12 @@ function account(state = {}, action) {
       return { ...state };
 
     case actionTypes.CREATE_SUBTAGS_SUCCESS:
-      toast.success('ساب‌تگ ما موفقیت اضافه شد!');
-      window.location.reload();
+      toast.success('ساب‌تگ با موفقیت اضافه شد!');
+      setTimeout(() => window.location.reload(), 2000)
       return { ...state };
 
     case actionTypes.CREATE_SUBTAGS_FAILURE:
-      toast.error('عنوان ساب‌تگ تکراری است!');
+      toast.error('یا عنوان ساب‌تگ تکراری‌ست، یا تگی با این نام وجود ندارد!');
       return { ...state };
 
     case actionTypes.CREATE_ACCOUNT_FAILURE:
