@@ -1,4 +1,4 @@
-export const ROOT = "http://bank.karsooghmehregan.ir/api/";
+export const ROOT = "http://localhost:8000/api/";
 
 export const GET_USER = (id) => ROOT.concat(`account/${id}`);
 
@@ -20,6 +20,7 @@ export const GET_SOURCES = ROOT.concat('source/');
 export const GET_PROBLEMS_LIST = ROOT.concat('qfilter/');
 
 
+export const ACCOUNT = ROOT.concat('account/');
 export const PROBLEM = (pid) => pid ? ROOT.concat('problem/pid') : ROOT.concat('problem/');
 export const ANSWER = (pid) => pid ? ROOT.concat('answer/pid') : ROOT.concat('answer/');
 export const TAG = ROOT.concat('tag/');

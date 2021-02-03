@@ -48,29 +48,30 @@ export const login = (username, password) => ({
 });
 
 
-export const register = (
+export const createAccount = (
   username,
-  password,
-  first_name,
-  last_name,
-  phone_number,
+  firstname,
+  lastname,
+  phone,
   email,
+  role = 'w',
 ) => ({
   [CALL_API]: {
     types: [
-      actionTypes.REGISTER_REQUEST,
-      actionTypes.REGISTER_SUCCESS,
-      actionTypes.REGISTER_FAILURE,
+      actionTypes.CREATE_ACCOUNT_REQUEST,
+      actionTypes.CREATE_ACCOUNT_SUCCESS,
+      actionTypes.CREATE_ACCOUNT_FAILURE,
     ],
-    url: URLs.REGISTER_USER,
+    url: URLs.ACCOUNT,
     fetchOptions: {
       method: 'POST',
       body: {
-        user: { username, password },
-        first_name,
-        last_name,
-        phone_number,
+        username,
+        firstname,
+        lastname,
+        phone,
         email,
+        role,
       },
     },
   },

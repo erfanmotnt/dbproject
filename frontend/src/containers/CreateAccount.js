@@ -7,44 +7,31 @@ import {
   Message,
   Segment,
   Container,
+  Dropdown,
 } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { register } from '../redux/actions/account';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
+import { createAccount } from '../redux/actions/account';
+import { connect, useStore } from 'react-redux';
 
 
 
-const Registration = ({ isFetching, isLoggedIn, register }) => {
-  const [username, setUsername] = useState()
-  const [password, setPassword] = useState()
-  const [firstName, setFirstName] = useState()
-  const [lastName, setLastName] = useState()
-  const [phoneNumber, setPhoneNumber] = useState()
-  const [email, setEmail] = useState()
-
-  function confirmPassword(e) {
-    let elem = e.target;
-    if (password !== elem.value) {
-      elem.setCustomValidity("رمزهای عبورت یکسان نیستند!");
-    } else {
-      elem.setCustomValidity('');
-    }
-  }
+const CreateAccount = ({ isFetching, createAccount }) => {
+  const [username, setUsername] = useState();
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
+  const [phone, setPhone] = useState();
+  const [email, setEmail] = useState();
+  const [role, setRole] = useState('w');
 
   async function handleSubmit(event) {
     const ok = isFormDataOk()
     if (ok) {
-      register(username, password, firstName, lastName, phoneNumber, email);
+      createAccount(username, firstName, lastName, phone, email, role);
     }
   }
 
   function isFormDataOk() {
     return true //todo: validate data
-  }
-
-  if (isLoggedIn) {
-    return <Redirect to='/' />
   }
 
   return (
@@ -56,7 +43,7 @@ const Registration = ({ isFetching, isLoggedIn, register }) => {
             width={6}
           >
             <Header as="h2" textAlign="center">
-              ثبت‌نام
+              ساخت حساب
             </Header>
 
             <Segment>
@@ -67,11 +54,8 @@ const Registration = ({ isFetching, isLoggedIn, register }) => {
               >
                 <Form.Input
                   name="username"
-                  type="username"
                   required
                   fluid
-                  // icon="user"
-                  // iconPosition="right"
                   placeholder="نام کاربری"
                   className="persian-input"
                   value={username}
@@ -81,42 +65,11 @@ const Registration = ({ isFetching, isLoggedIn, register }) => {
                 </Form.Input>
 
                 <Form.Input
-                  name="password"
-                  required
-                  fluid
-                  // icon="lock"
-                  // iconPosition="right"
-                  placeholder="رمز عبور"
-                  type="password"
-                  className="persian-input"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                >
-                  <input style={{ direction: 'ltr' }} />
-                </Form.Input>
-
-                <Form.Input
-                  name="password_confirmation"
-                  required
-                  fluid
-                  // icon="lock"
-                  // iconPosition="right"
-                  placeholder="تکرار رمز عبور"
-                  type="password"
-                  className="persian-input"
-                  onChange={confirmPassword}
-                >
-                  <input style={{ direction: 'ltr' }} />
-                </Form.Input>
-
-                <Form.Input
                   name="firstName"
+                  type="name"
                   required
                   fluid
-                  // icon="user" //todo
-                  // iconPosition="right"
                   placeholder="نام"
-                  type="name"
                   className="persian-input"
                   value={firstName}
                   onChange={(event) => setFirstName(event.target.value)}
@@ -126,12 +79,10 @@ const Registration = ({ isFetching, isLoggedIn, register }) => {
 
                 <Form.Input
                   name="lastName"
+                  type="name"
                   required
                   fluid
-                  // icon="user" //todo
-                  // iconPosition="right"
                   placeholder="نام خانوادگی"
-                  type="name"
                   className="persian-input"
                   value={lastName}
                   onChange={(event) => setLastName(event.target.value)}
@@ -141,27 +92,23 @@ const Registration = ({ isFetching, isLoggedIn, register }) => {
 
                 <Form.Input
                   name="phoneNumber"
+                  type="phone"
                   required
                   fluid
-                  // icon="phone"
-                  // iconPosition="right"
-                  placeholder="شماره موبایل"
-                  type="phone" //todo:
+                  placeholder="شماره‌موبایل"
                   className="persian-input"
-                  value={phoneNumber}
-                  onChange={(event) => setPhoneNumber(event.target.value)}
+                  value={phone}
+                  onChange={(event) => setPhone(event.target.value)}
                 >
                   <input style={{ direction: 'ltr' }} />
                 </Form.Input>
 
                 <Form.Input
                   name="email"
+                  type="mail"
                   required
                   fluid
-                  // icon="mail"
-                  // iconPosition="right"
                   placeholder="ایمیل"
-                  type="mail" //todo  
                   className="persian-input"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
@@ -169,14 +116,37 @@ const Registration = ({ isFetching, isLoggedIn, register }) => {
                   <input style={{ direction: 'ltr' }} />
                 </Form.Input>
 
+                <Form.Input >
+                  <Dropdown
+                    style={{ direction: 'rtl', textAlign: '-webkit-right' }}
+                    placeholder='انتخاب نوع حساب کاربری'
+                    fluid
+                    selection
+                    options={[
+                      {
+                        key: '1',
+                        text: 'مدرس',
+                        value: 'teacher',
+                      },
+                      {
+                        key: '2',
+                        text: 'منتور',
+                        value: 'mentor',
+                      },
+                      {
+                        key: '3',
+                        text: 'مدیر',
+                        value: 'admin',
+                      },
+                    ]}
+                  />
+                </Form.Input>
+
                 <Button primary fluid size="large" onClick disabled={isFetching}>
-                  ثبت‌نام
+                  ساخت حساب
                 </Button>
               </Form>
             </Segment>
-            <Message style={{ direction: 'rtl' }}>
-              قبلاً ثبت‌نام کردی؟ <Link to="/login">وارد شو!</Link>
-            </Message>
           </Grid.Column>
         </Grid.Row>
       </Grid >
@@ -193,5 +163,5 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(mapStateToProps, {
-  register,
-})(Registration)
+  createAccount,
+})(CreateAccount)

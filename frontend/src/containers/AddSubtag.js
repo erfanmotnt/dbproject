@@ -9,9 +9,9 @@ import {
   Paper,
   Select,
 } from '@material-ui/core';
-import { connect } from 'react-redux'
-import Editor from '../components/editor/tiny_editor/react_tiny/TinyEditorComponent';
-
+import { toast } from 'react-toastify';
+import { connect } from 'react-redux';
+import { createSubtag } from '../redux/actions/properties';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,15 +32,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Subtag = () => {
+const Subtag = ({ createSubtag }) => {
   const classes = useStyles();
+  const [subtagName, setSubtagName] = useState('')
+  const [tagName, setTagName] = useState('')
+
+  const handleSubmit = () => {
+    if (!subtagName || !tagName) {
+      toast.error('لطفاً هم عنوان ساب‌تگ و هم عنوان تگ پدر را وارد کن!');
+      return;
+    }
+    createSubtag(subtagName, tagName)
+  }
 
   return (
     <div className={classes.root}>
       <Grid container justify='center' alignItems='center' className={classes.background}>
         <Grid
           xs={10}
-          sm={8}
+          sm={6}
           item container
           justify='center'
           alignItems='stretch'
@@ -59,26 +69,30 @@ const Subtag = () => {
                 justify='center'
                 spacing={2}>
                 <Grid item>
-                  <TextField label='عنوان' variant='outlined' gutterBottom fullWidth />
+                  <TextField
+                    label='عنوان ساب‌تگ'
+                    variant='outlined'
+                    gutterBottom
+                    fullWidth
+                    onChange={(e) => setSubtagName(e.target.value)}
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    label='عنوان تگ پدر'
+                    variant='outlined'
+                    gutterBottom
+                    fullWidth
+                    onChange={(e) => setTagName(e.target.value)}
+                  />
                 </Grid>
                 <Grid container item alignItems='center' justify='center' spacing={2}>
                   <Grid item>
-                    <Select
-                      variant='outlined'
-                      native
-                      // onChange={handleChange}
-                      inputProps={{
-                        name: 'age',
-                        id: 'filled-age-native-simple',
-                      }}
+                    <Button
+                      variant='contained'
+                      color='primary'
+                      onClick={handleSubmit}
                     >
-                      <option value={10}>تگ اول</option>
-                      <option value={20}>تگ دوم</option>
-                      <option value={30}>تگ سوم</option>
-                    </Select>
-                  </Grid>
-                  <Grid item>
-                    <Button variant='contained' color='primary'>
                       بزن بریم
                     </Button>
                   </Grid>
@@ -99,6 +113,6 @@ const mapStateToProps = (state, ownProps) => ({
 export default connect(
   mapStateToProps,
   {
-
+    createSubtag,
   }
 )(Subtag);

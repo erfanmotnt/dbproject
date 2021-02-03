@@ -3,6 +3,32 @@ import { toast } from 'react-toastify';
 
 function account(state = {}, action) {
   switch (action.type) {
+    case actionTypes.CREATE_ACCOUNT_SUCCESS:
+      toast.success('حساب با موفقیت ساخته شد!')
+      return { ...state };
+
+    case actionTypes.CREATE_TAGS_SUCCESS:
+      toast.success('تگ ما موفقیت اضافه شد!');
+      window.location.reload();
+      return { ...state };
+
+    case actionTypes.CREATE_TAGS_FAILURE:
+      toast.error('عنوان تگ تکراری است!');
+      return { ...state };
+
+    case actionTypes.CREATE_SUBTAGS_SUCCESS:
+      toast.success('ساب‌تگ ما موفقیت اضافه شد!');
+      window.location.reload();
+      return { ...state };
+
+    case actionTypes.CREATE_SUBTAGS_FAILURE:
+      toast.error('عنوان ساب‌تگ تکراری است!');
+      return { ...state };
+
+    case actionTypes.CREATE_ACCOUNT_FAILURE:
+      toast.error('نام کاربری این حساب تکراری است!')
+      return { ...state }
+
     case actionTypes.REGISTER_SUCCESS:
       toast.success('ورودت رو به بانک مسئله خوش‌آمد میگم!')
       return { ...state };

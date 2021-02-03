@@ -3,8 +3,7 @@ import DevTools from '../containers/DevTools';
 import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import LoginPage from '../containers/Login';
-import RegistrationPage from '../containers/Registration';
+import CreateAccount from '../containers/CreateAccount';
 import Homepage from '../containers/HomePage';
 import ViewProblem from '../containers/ViewProblem';
 import Problem from '../containers/Problem';
@@ -30,16 +29,14 @@ const Root = ({ isLoggedIn, username, logout }) => {
         logout: logout,
       })}>
         <Switch>
-          <Route path="/login" component={LoginPage} />
-          <Route path="/registration" component={RegistrationPage} />
-          <PrivateRoute path="/answer/:pid?" component={AddAnswer} />
-          <PrivateRoute path="/tag/" component={AddTag} />
-          <PrivateRoute path="/subtag/" component={AddSubtag} />
-
-          <PrivateRoute path="/problem/:id" component={ViewProblem} />
-          <PrivateRoute path="/makeProblem/" component={Problem} />
-          <PrivateRoute path="/editProblem/:id" component={Problem} />
-          <PrivateRoute path="/problemset/page/:id" render={() => <ProblemSet key={Math.random()} />} />
+          <Route path="/create-account" component={CreateAccount} />
+          <Route path="/answer/:pid?" component={AddAnswer} />
+          <Route path="/tag/" component={AddTag} />
+          <Route path="/subtag/" component={AddSubtag} />
+          <Route path="/problem/:id" component={ViewProblem} />
+          <Route path="/makeProblem/" component={Problem} />
+          <Route path="/editProblem/:id" component={Problem} />
+          <Route path="/problemset/page/:id" render={() => <ProblemSet key={Math.random()} />} />
           <Route path="/" component={Homepage} />
         </Switch>
         <DevTools />

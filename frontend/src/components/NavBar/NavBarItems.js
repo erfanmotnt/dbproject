@@ -11,24 +11,14 @@ const rightItems = (config) => {
   const Items = [];
   if (!config.isLoggedIn) {
     Items.push(
-      <Menu.Item name="login">
-        <Button as={Link} to="/login" primary>
-          ورود
-        </Button>
-      </Menu.Item>,
       <Menu.Item name="register">
-        <Button as={Link} to="/registration" positive>
-          ثبت‌نام
+        <Button as={Link} to="/create-account" primary>
+          ساخت حساب
         </Button>
       </Menu.Item>,
     );
   } else {
     Items.push(
-      <Menu.Item name="logout">
-        <Button as={Link} to="/" onClick={config.logout} primary>
-          خروج
-        </Button>
-      </Menu.Item>,
     );
   }
   return Items;

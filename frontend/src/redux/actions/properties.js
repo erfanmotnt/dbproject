@@ -27,6 +27,43 @@ export const getTags = () => (
   }
 };
 
+export const createTag = (name) => ({
+  [CALL_API]: {
+    types: [
+      actionTypes.CREATE_TAGS_REQUEST,
+      actionTypes.CREATE_TAGS_SUCCESS,
+      actionTypes.CREATE_TAGS_FAILURE,
+    ],
+    url: URLs.TAG,
+    fetchOptions: {
+      method: 'POST',
+      body: {
+        cusername: null,
+        tname: name,
+      }
+    },
+  },
+})
+
+export const createSubtag = (subtagName, tagName) => ({
+  [CALL_API]: {
+    types: [
+      actionTypes.CREATE_SUBTAGS_REQUEST,
+      actionTypes.CREATE_SUBTAGS_SUCCESS,
+      actionTypes.CREATE_SUBTAGS_FAILURE,
+    ],
+    url: URLs.SUBTAG,
+    fetchOptions: {
+      method: 'POST',
+      body: {
+        cusername: null,
+        tname: tagName,
+        stname: subtagName,
+      }
+    },
+  },
+})
+
 const fetchSubtags = () => ({
   [CALL_API]: {
     types: [
