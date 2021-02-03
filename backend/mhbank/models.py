@@ -68,6 +68,7 @@ class Problem(models.Model):
     vusername = models.ForeignKey("Account", null=True, on_delete=models.SET_NULL)
     vcomment = models.CharField(max_length=1000, null=True)
     rsid = models.ForeignKey("Resource", null=True, on_delete=models.SET_NULL)
+    tname = models.ForeignKey("Tag", on_delete=models.SET_NULL, null=True)
 
 class PRU(models.Model):
     pid = models.ForeignKey("Problem", on_delete=models.CASCADE)
