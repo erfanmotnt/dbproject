@@ -4,12 +4,13 @@ import { toast } from 'react-toastify';
 function account(state = {}, action) {
   switch (action.type) {
     case actionTypes.CREATE_ACCOUNT_SUCCESS:
-      toast.success('حساب با موفقیت ساخته شد!')
+      toast.success('حساب با موفقیت ساخته شد!');
+      setTimeout(() => window.location.reload(), 3000);
       return { ...state };
 
     case actionTypes.CREATE_TAGS_SUCCESS:
       toast.success('تگ با موفقیت اضافه شد!');
-      setTimeout(() => window.location.reload(), 2000)
+      setTimeout(() => window.location.reload(), 3000)
       return { ...state };
 
     case actionTypes.CREATE_TAGS_FAILURE:
@@ -18,7 +19,7 @@ function account(state = {}, action) {
 
     case actionTypes.CREATE_SUBTAGS_SUCCESS:
       toast.success('ساب‌تگ با موفقیت اضافه شد!');
-      setTimeout(() => window.location.reload(), 2000)
+      setTimeout(() => window.location.reload(), 3000)
       return { ...state };
 
     case actionTypes.CREATE_SUBTAGS_FAILURE:

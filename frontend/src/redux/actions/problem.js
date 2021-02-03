@@ -48,7 +48,7 @@ export const fetchProblemsListByPage = (page) => ({
   },
 });
 
-export const createProblem = (problem) => {
+export const createProblem = (pid = Math.random(), name, text, minaar, maxaar, level) => {
   return ({
     [CALL_API]: {
       types: [
@@ -62,7 +62,14 @@ export const createProblem = (problem) => {
       url: URLs.SUBMIT_PROBLEM,
       fetchOptions: {
         method: 'POST',
-        body: problem,
+        body: {
+          pid,
+          name,
+          text,
+          minaar,
+          maxaar,
+          level,
+        },
       },
     },
   })
