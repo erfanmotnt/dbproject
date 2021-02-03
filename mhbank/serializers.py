@@ -20,5 +20,10 @@ class SubTagSerializer(serializers.ModelSerializer):
 
 class ProblemSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Question
+        model = Problem
+        fields = '__all__'
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
         fields = '__all__'

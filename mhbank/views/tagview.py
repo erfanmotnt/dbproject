@@ -20,12 +20,6 @@ def tagview(request):
             cursor.execute("insert into mhbank_tag values(%s, %s)", [tname, cusername])
 
 
-
-
-{
-    tname: "hendeseh",
-    cusername: "erfan"
-}
 @api_view(['GET'])
 def subtagview(request):
     data = SubTag.objects.raw("select * from mhbank_subtag")
