@@ -8,7 +8,7 @@ router = DefaultRouter()
 
 urlpatterns = [
     path('tag/', tagview),
-    
+    path('subtag/', subtagview),
 ]
 
 urlpatterns += router.urls

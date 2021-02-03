@@ -4,66 +4,44 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Account(models.Model):
-    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE, unique=True, related_name='account')
-    first_name = models.CharField(max_length=30, default='None')
-    last_name = models.CharField(max_length=30, default='None')
-    phone_number = models.CharField(max_length=20)
+    username = models.CharField(max_length=40, primary_key=True)
+    firstname = models.CharField(max_length=30, default='None')
+    lastname = models.CharField(max_length=30, default='None')
+    phone = models.CharField(max_length=20)
     email = models.CharField(max_length=200)
-    # added_questions
-    # attempts
-    scientific_rate = models.IntegerField(default=0)
-    contribution_rate = models.IntegerField(default=0)
     role = models.CharField(max_length=1)
-
-    # image_url ... not complete
-
-    def __str__(self):
-        return self.user.username
-
-    def numberOfAdds(self):
-        self.contribution_rate = len(self.question_set.all())
-        self.save()
-        return len(self.question_set.all())
-
-    def is_adder(self):
-        return self.role == 'a'
-
-    def is_mentor(self):
-        return self.role == 'm'
-
-    def is_superuser(self):
-        return self.role == 's'
-
-
-class Source(models.Model):
-    name = models.CharField(max_length=200)
-
-    # questions
-
+    srate = models.IntegerField(default=0)
+    crate = models.IntegerField(default=0)
 
 
 class Tag(models.Model):
     tname = models.CharField(max_length=200, primary_key = True)
-    cusername = models.ForeignKey(Account, null = True, on_delete=models.SET_NULL)
+    cusername = models.ForeignKey("Account", null = True, on_delete=models.SET_NULL)
 
     # sub_tags
     def __str__(self):
         return self.tname
 
 
-class Sub_tag(models.Model):
-    name = models.CharField(max_length=200)
-    parent = models.ForeignKey(Tag, on_delete=models.CASCADE)
+class SubTag(models.Model):
+    tname = models.ForeignKey("Tag", on_delete=models.CASCADE)
+    stname = models.CharField(max_length=200)
+    cusername = models.ForeignKey("Account", null = True, on_delete=models.SET_NULL, related_name="subtags")
+    dusername = models.ForeignKey("Account", null = True, on_delete=models.SET_NULL)
+
 
     def __str__(self):
         return self.name
 
+    class Meta:
+        unique_together = (("tname", "stname"),)
+
 
 class Event(models.Model):
-    name = models.CharField(max_length=200)
-
-    # questions
-
+    ename = models.CharField(max_length=200, primary_key=True)
+    cusername = models.ForeignKey("Account", null=True, on_delete=models.SET_NULL)
+    cdate = models.DateTimeField(null=True)
+    
     def __str__(self):
         return self.name
 
@@ -71,53 +49,82 @@ class Event(models.Model):
 class Problem(models.Model):
     pid = models.IntegerField(primary_key = True)
     name = models.CharField(max_length=200)
-    verification_status = models.CharField(max_length=50)
-    verification_comment = models.CharField(max_length=1000, null=True, blank=True)
-    tags = models.ManyToManyField(Tag, blank=True)
-    sub_tags = models.ManyToManyField(Sub_tag, blank=True)
-    events = models.ManyToManyField(Event, blank=True)
-    source = models.ForeignKey(Source, blank=True, null=True, on_delete=models.SET_NULL)
-    question_maker = models.ForeignKey(Account, on_delete=models.CASCADE)
+    state = models.CharField(max_length=1)
+    score = models.IntegerField(default=0)
     text = models.TextField()
-    # answer = models.CharField(max_length=3000, null=True, blank=True)
-    # guidance = models.CharField(max_length=1000)
-    publish_date = models.DateTimeField('date published')
-    change_date = models.DateTimeField(null=True, blank=True)
-    #hardness
-    # themed_qs
-    # emoj
+    
+    cusername = models.ForeignKey("Account", null=True, on_delete=models.SET_NULL, related_name="cproblems")
+    cdate = models.DateTimeField(null=True)
+    chusername = models.ForeignKey("Account", null=True, on_delete=models.SET_NULL, related_name="chproblems")
+    chdate = models.DateTimeField(null=True)
+    dusername = models.ForeignKey("Account", null=True, on_delete=models.SET_NULL, related_name="dproblems")
+    ddate = models.DateTimeField(null=True)
+    
+    level = models.IntegerField(default=5)
+    minaar = models.IntegerField(
+        default=1,
+        validators=[MaxValueValidator(12), MinValueValidator(1)]
+    )
+    maxaar = models.IntegerField(
+        default=12,
+        validators=[MaxValueValidator(12), MinValueValidator(1)]
+    )
+    vusername = models.ForeignKey("Account", null=True, on_delete=models.SET_NULL)
+    vcomment = models.CharField(max_length=1000, null=True)
+    rsid = models.ForeignKey("Resource", null=True, on_delete=models.SET_NULL)
 
-    def __str__(self):
-        return self.name
-
+class PRU(models.Model):
+    pid = models.ForeignKey("Problem", on_delete=models.CASCADE)
+    username = models.ForeignKey("Account", on_delete=models.CASCADE)
+    score = models.IntegerField(default=0)
+    class Meta:
+        unique_together = (("pid", "username"),)
 
 class Answer(models.Model):
-    problem = models.ForeignKey(Problem, on_delete=models.CASCADE, null=True, related_name='answers')
+    pid = models.ForeignKey("Problem", on_delete=models.CASCADE)
+    anum = models.IntegerField()
     text = models.TextField()
-    account = models.ForeignKey(Account, on_delete=models.CASCADE)
-    change_date = models.DateTimeField(null=True, blank=True)
-    publish_date = models.DateTimeField('date published', null=True, blank=True)
+    cusername = models.ForeignKey("Account", null=True, on_delete=models.SET_NULL, related_name="answers")
+    cdate = models.DateTimeField(null=True)
+    chusername = models.ForeignKey("Account", null=True, on_delete=models.SET_NULL)
+    chdate = models.DateTimeField(null=True)
+    class Meta:
+        unique_together = (("pid", "anum"),)
 
-    # guidances
-    # comments
-    # is it original?(not student writen)
-    # likes
-    # teaches
 
 class Guidance(models.Model):
-    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
+    pid = models.ForeignKey("Problem", on_delete=models.CASCADE)
+    gnum = models.IntegerField()
+    anum = models.ForeignKey("Answer", on_delete=models.CASCADE)
     text = models.TextField()
-    change_date = models.DateTimeField(null=True, blank=True)
-    publish_date = models.DateTimeField('date published', null=True, blank=True)
+    cusername = models.ForeignKey("Account", null=True, on_delete=models.SET_NULL, related_name="guidances")
+    cdate = models.DateTimeField(null=True)
+    chusername = models.ForeignKey("Account", null=True, on_delete=models.SET_NULL)
+    chdate = models.DateTimeField(null=True)
+    class Meta:
+        unique_together = (("pid", "gnum"),)
+
+class Resource(models.Model):
+    rsid = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=100)
+    cusername = models.ForeignKey("Account", null=True, on_delete=models.SET_NULL, related_name="resources")
+    cdate = models.DateTimeField(null=True)
+    chusername = models.ForeignKey("Account", null=True, on_delete=models.SET_NULL)
+    chdate = models.DateTimeField(null=True)
 
 
-class Teach_box(models.Model):
-    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
-    goal = models.CharField(max_length=1000, null=True, blank=True)
-    expectations = models.CharField(max_length=1000, null=True, blank=True)
-    # notes
+class TeachBox(models.Model):
+    pid = models.ForeignKey("Problem", on_delete=models.CASCADE)
+    answer = models.ForeignKey("Answer", on_delete=models.CASCADE)
+    explanation = models.TextField(null=True)
+    goal = models.TextField(null=True)
     time = models.TimeField(null=True)
-    generalـprocess = models.CharField(max_length=3000)
-    change_date = models.DateTimeField(null=True, blank=True)
-    publish_date = models.DateTimeField('date published', null=True, blank=True)
+    
+    cusername = models.ForeignKey("Account", null=True, on_delete=models.SET_NULL, related_name="teachboxes")
+    cdate = models.DateTimeField(null=True)
+    chusername = models.ForeignKey("Account", null=True, on_delete=models.SET_NULL)
+    chdate = models.DateTimeField(null=True)
+    
+    class Meta:
+        unique_together = (("pid", "answer"),)
 
