@@ -13,7 +13,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 class SubTagSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Tag
+        model = SubTag
         fields = '__all__'
 
 
