@@ -14,7 +14,7 @@ urlpatterns = [
     path('subtag/', subtagview),
     path('problem/', problemview),
     path('account/', accountview),
-    path('initial/', initial())
+    path('initial/', initial),
 ]
 
 urlpatterns += router.urls
