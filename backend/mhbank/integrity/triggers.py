@@ -35,3 +35,15 @@ def st_level_trigger():
             "nst.level < 1 AND nst.level > 5 " +
             "SIGNAL.SQL State '7005' ('level isn't in range'))"
         )
+
+
+def problem_minaar_trigger():
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "Create trigger minaar_trigger " +
+            "before insert on Problem " +
+            "referencing new as np " +
+            "for each row when(" +
+            "nst.level < 1 AND nst.level > 12 " +
+            "SIGNAL.SQL State '7005' ('minaar isn't in range'))"
+        )
