@@ -222,13 +222,10 @@ class Problem extends Component {
             </Grid.Column>
             <Grid.Column width={5} only="computer" style={{ textAlign: 'center' }}>
               <Button
-                onClick={this.props.history.goBack}
-                icon
-                labelPosition='left'
+                href='/answer'
                 color='blue'
               >
-                <Icon name='reply' />
-                {'بازگشت'}
+                {'افزودن پاسخ'}
               </Button>
             </Grid.Column>
           </Grid.Row>
@@ -346,42 +343,6 @@ class Problem extends Component {
                   }
                   className="rtl-dropdown"
                 />
-                <Segment textAlign="center">
-                  <Label attached="top">مباحث کلی سوال</Label>
-                  <div>
-                    {this.props.tags.map((tag) => (
-                      <Tag
-                        size={'large'}
-                        name={tag.name}
-                        selectable
-                        key={tag.id}
-                        id={tag.id}
-                        selected={this.state.selectedTags[tag.id]}
-                        onChange={this.handleTagChange}
-                      />
-                    ))}
-                  </div>
-                </Segment>
-                <Segment textAlign="center">
-                  <Label attached="top">مباحث ریزتر</Label>
-                  <div>
-                    {this.props.subtags.map((subtag) => {
-                      if (this.state.selectedTags[subtag.parent]) {
-                        return (
-                          <Tag
-                            size={'large'}
-                            name={subtag.name}
-                            selectable
-                            key={subtag.id}
-                            id={subtag.id}
-                            selected={this.state.selectedSubtags[subtag.id]}
-                            onChange={this.handleSubtagChange}
-                          />
-                        )
-                      }
-                    })}
-                  </div>
-                </Segment>
               </Segment>
             </Grid.Column>
           </Grid.Row>

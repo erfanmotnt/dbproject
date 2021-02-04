@@ -1,54 +1,103 @@
-import React from 'react';
-import { Button, Icon, Header, Container, Divider } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react'
+import {
+  Container,
+  Grid,
+  makeStyles,
+  TextField,
+  Button,
+  Typography,
+  Paper,
+  Select,
+} from '@material-ui/core';
+import { toast } from 'react-toastify';
+import { connect } from 'react-redux';
+import { createTag } from '../redux/actions/properties';
 
-const HomepageLayout = ({ mobile }) => (
-  <Container text>
-    <Header
-      as="h1"
-      content="بانک مسئله"
-      inverted
-      style={{
-        fontSize: mobile ? '2em' : '4em',
-        fontWeight: 'normal',
-        marginBottom: 0,
-        color: 'black',
-        direction: 'rtl',
-        textAlign: 'center',
-        marginTop: mobile ? '0.5em' : '2em',
-      }}
-    />
-    <Divider hidden />
-    <Button
-      primary
-      style={{
-        direction: 'rtl',
-        textAlign: 'center',
-        margin: 'auto',
-        display: 'table',
-      }}
-      as={Link}
-      to="/problemset/page/1"
-    >
-      مجموعه‌ی مسئله‌ها
-      <Icon name="left arrow" />
-    </Button>
-    <Button
-      color='teal'
-      style={{
-        direction: 'rtl',
-        textAlign: 'center',
-        margin: 'auto',
-        display: 'table',
-      }}
-      as={Link}
-      to="/makeProblem"
-    >
-      <Icon name="right arrow" />
-      ایجاد مسئله‌ی جدید
-    </Button>
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    direction: 'ltr',
+  },
+  background: {
+    minHeight: `calc(100vh - 5em)`,
+  },
+  title: {
+    fontSize: 90,
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+  },
+  paper: {
+    padding: theme.spacing(2),
+    margin: 'auto',
+  },
+}))
 
-  </Container>
-);
+const Landing = ({ createTag }) => {
+  const classes = useStyles();
+  const [name, setName] = useState('')
 
-export default HomepageLayout;
+  const handleSubmit = () => {
+    if (!name) {
+      toast.error('لطفاً عنوان تگ را وارد کن!');
+      return;
+    }
+    createTag(name);
+  }
+
+  return (
+    <div className={classes.root}>
+      <Grid container justify='center' alignItems='center' className={classes.background}>
+        <Grid
+          xs={10}
+          sm={6}
+          item container
+          justify='center'
+          alignItems='stretch'
+          direction='column'
+          spacing={6}>
+          <Grid item>
+            <Typography gutterBottom variant='h2' className={classes.title} align='center'>
+              بانک مسئله
+            </Typography>
+          </Grid>
+          <Grid item >
+            <Grid
+              container
+              direction='column'
+              justify='center'
+              spacing={2}>
+              <Grid container item alignItems='center' justify='center' spacing={2}>
+                <Grid item>
+                  <Button size='large' href='/subtag' variant='contained' color='primary'>
+                    افزودن ساب‌تگ
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button size='large' href='/tag' variant='contained' color='primary'>
+                    افزودن تگ
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button size='large' href='/makeproblem' variant='contained' color='primary'>
+                    ایجاد سوال
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </div>
+  )
+}
+
+const mapStateToProps = (state, ownProps) => ({
+
+})
+
+export default connect(
+  mapStateToProps,
+  {
+    createTag,
+  }
+)(Landing);
